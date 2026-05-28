@@ -2,7 +2,7 @@
  
 > Production-grade observability for ROS 2 robot fleets.
  
-ROSscope is an open source monitoring platform that gives robotics engineers real-time visibility into their ROS 2 systems — topic health, service availability, node lifecycle states, and AI-powered anomaly detection. Think Datadog, built for robots.
+ROSscope is an open source monitoring platform that gives robotics engineers real-time visibility into their ROS 2 systems topic health, service availability, node lifecycle states, and AI-powered anomaly detection. Think Datadog, built for robots.
  
 ---
  
@@ -19,13 +19,13 @@ ROSscope fixes that.
  
 ## Features
  
-- **Topic monitoring** — publish rate (Hz), message count, publisher count per topic
-- **Service monitoring** — discovery and server availability across the fleet
-- **Lifecycle monitoring** — managed node state tracking (unconfigured/inactive/active/finalized)
-- **Anomaly detection** — z-score statistical baseline per topic, no threshold tuning required
-- **Prometheus exporter** — 15 custom metrics over HTTP, scrape-ready
-- **Grafana dashboard** — pre-built, auto-provisioned, zero manual setup
-- **One command deploy** — `docker compose up -d`
+- **Topic monitoring** - publish rate (Hz), message count, publisher count per topic
+- **Service monitoring** - discovery and server availability across the fleet
+- **Lifecycle monitoring** - managed node state tracking (unconfigured/inactive/active/finalized)
+- **Anomaly detection** - z-score statistical baseline per topic, no threshold tuning required
+- **Prometheus exporter** - 15 custom metrics over HTTP, scrape-ready
+- **Grafana dashboard** - pre-built, auto-provisioned, zero manual setup
+- **One command deploy** - `docker compose up -d`
 ---
  
 ## Architecture
@@ -140,14 +140,14 @@ rosscope/
 ## Roadmap
  
 - [ ] Root cause correlation engine across nodes
-- [ ] Predictive maintenance — failure forecasting via ML
-- [ ] Auto-remediation — node restart, traffic reroute, failover
+- [ ] Predictive maintenance - failure forecasting via ML
+- [ ] Auto-remediation - node restart, traffic reroute, failover
 - [ ] Helm chart for Kubernetes fleet deployment
 - [ ] Multi-robot fleet map view in Grafana
 - [ ] REST API for external integrations and webhooks
 - [ ] TF tree freshness monitoring
 - [ ] ROS 2 bag replay for post-mortem analysis
-- [ ] Alert channels — Slack, PagerDuty, email
+- [ ] Alert channels - Slack, PagerDuty, email
 ---
  
 ## Built With
@@ -161,7 +161,7 @@ rosscope/
  
 ## Author
  
-Muhammad Jawad — DevOps & AIOps Engineer
+Muhammad Jawad - DevOps & AIOps Engineer
 [github.com/jawad-glitch](https://github.com/jawad-glitch)
 muhammadjawadok@gmail.com
  
@@ -169,4 +169,4 @@ muhammadjawadok@gmail.com
  
 ## License
  
-MIT License — use it, fork it, build on it.
+MIT License - use it, fork it, build on it.
