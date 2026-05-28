@@ -3,7 +3,6 @@ import rclpy
 from rclpy.node import Node
 from ros2topic.api import get_topic_names_and_types
 from rosidl_runtime_py.utilities import get_message
-from exporter.prometheus_exporter import ROSScopeExporter
 import time
 import os
 import threading
@@ -17,10 +16,7 @@ class TopicCollector(Node):
         self.topic_counts = {}
         self.topic_types = {}
         self.subscribers = {}
-
-        # Start Prometheus exporter
-        self.exporter = ROSScopeExporter(port=8000)
-        self.exporter.start()
+        self.exporter = None
 
         # timer
         self.last_check_time = time.time()

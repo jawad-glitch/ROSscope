@@ -1,13 +1,11 @@
 FROM ros:humble-ros-base
 
-# Install Python deps
 RUN apt-get update && apt-get install -y python3-pip && \
     pip3 install prometheus-client
 
-# Copy source
 WORKDIR /rosscope
 COPY collector/ ./collector/
 COPY exporter/ ./exporter/
+COPY main.py .
 
-# Source ROS 2 and run
-CMD ["/bin/bash", "-c", "source /opt/ros/humble/setup.bash && python3 -m collector.topic_collector"]
+CMD ["/bin/bash", "-c", "source /opt/ros/humble/setup.bash && python3 main.py"]
