@@ -55,7 +55,18 @@ ROS 2 Robot Fleet
 ---
  
 ## Quickstart
- 
+
+### Known Limitations
+
+- **WSL2:** Requires CycloneDDS with explicit interface configuration. Set the following before running ROS 2 nodes:
+```bash
+  export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+  export CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="eth0"/></Interfaces></General></Domain></CycloneDDS>'
+```
+  The `docker-compose.yml` already includes this configuration for the collector container.
+- **Service probing:** Active latency measurement via `client.call()` may hang on some network configurations. Server availability tracking via `service_is_ready()` works reliably on all platforms.
+- **Lifecycle probing:** Full lifecycle state querying works on native Linux. WSL2 results may vary depending on DDS configuration.
+
 **Requirements:**
 - Docker + Docker Compose
 - ROS 2 Humble running on the host
