@@ -1,6 +1,8 @@
 FROM ros:humble-ros-base
 
-RUN apt-get update && apt-get install -y python3-pip && \
+RUN apt-get update && apt-get install -y \
+    python3-pip \
+    ros-humble-rmw-cyclonedds-cpp && \
     pip3 install prometheus-client
 
 WORKDIR /rosscope
