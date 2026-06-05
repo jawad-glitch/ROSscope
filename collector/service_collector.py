@@ -4,9 +4,12 @@ import rclpy.executors
 from rclpy.node import Node
 from rosidl_runtime_py.utilities import get_service
 import time
+import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from config import config
 
 class ServiceCollector(Node):
-    # Defined at the class level for easy maintenance
     SAFE_SERVICE_PREFIXES = [
         'rcl_interfaces/srv/GetParameters',
         'rcl_interfaces/srv/ListParameters', 
@@ -55,7 +58,9 @@ class ServiceCollector(Node):
         metrics = []
 
         for service_name, service_types in service_list:
-            if service_name.startswith('/rosout') or service_name.startswith('/parameter'):
+            if service_name in config.exclude_topics:
+                continue
+            if any(service_name.startswith(p) for p in config.exclude_topic_prefixes):
                 continue
 
             type_str = service_types[0]

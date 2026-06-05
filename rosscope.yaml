@@ -1,0 +1,41 @@
+rosscope:
+  # Collection
+  collection_interval: 5
+
+  # Anomaly detection
+  anomaly_threshold: 3.0
+  anomaly_window: 60
+  anomaly_min_samples: 10
+
+  # Topics to ignore
+  exclude_topics:
+    - /rosout
+    - /parameter_events
+  exclude_topic_prefixes:
+    - /rosscope
+
+  # Ports
+  metrics_port: 8000
+  graph_port: 8001
+  ui_port: 8080
+
+  # ROS 2
+  ros_domain_id: 0
+
+  # Alerts
+  alerts:
+    slack:
+      enabled: false
+      webhook_url: ""
+    email:
+      enabled: false
+      smtp_host: ""
+      smtp_port: 587
+      sender: ""
+      recipients: []
+    pagerduty:
+      enabled: false
+      integration_key: ""
+
+  # Grafana
+  grafana_password: rosscope

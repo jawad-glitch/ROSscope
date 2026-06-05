@@ -3,13 +3,14 @@ import statistics
 from collections import deque
 
 class AnomalyDetector:
-    def __init__(self, window_size=60, threshold=3.0):
+    def __init__(self, window_size=60, threshold=3.0, min_samples=10):
         """
         :param window_size: Number of readings to keep (60 = 5 mins at 5s interval).
         :param threshold: Z-score threshold (3.0 is a standard statistical anomaly).
         """
         self.window_size = window_size
         self.threshold = threshold
+        self.min_samples = min_samples
         self.history = {}
 
     def update(self, topic, value):
@@ -23,7 +24,7 @@ class AnomalyDetector:
         """Returns (is_anomaly, z_score) tuple."""
         readings = self.history.get(topic, [])
         
-        if len(readings) < 10:
+        if len(readings) < self.min_samples:
             return False, 0.0
             
         mean = statistics.mean(readings)

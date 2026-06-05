@@ -232,4 +232,4 @@ muhammadjawadok@gmail.com
  
 ## License
  
-MIT License — use it, fork it, build on it.
+MIT License - use it, fork it, build on it.

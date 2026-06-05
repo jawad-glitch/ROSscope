@@ -7,6 +7,9 @@ import uvicorn
 import threading
 from fastapi.responses import FileResponse
 import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from config import config
 
 # ── FastAPI setup ────
 app = FastAPI()
@@ -67,8 +70,7 @@ def serve_graph_ui():
 def start_api(collector_node):
     global _collector
     _collector = collector_node
-    uvicorn.run(app, host="0.0.0.0", port=8001, log_level="error")
-
+    uvicorn.run(app, host="0.0.0.0", port=config.graph_port, log_level="error")
 
 # ── ROS 2 Node ────
 class GraphCollector(Node):

@@ -10,6 +10,8 @@ import threading
 import sys
 import tty
 import termios
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from config import config
 
 class TopicCollector(Node):
     def __init__(self):
@@ -18,7 +20,13 @@ class TopicCollector(Node):
         self.topic_types = {}
         self.subscribers = {}
         self.exporter = None
-        self.anomaly_detector = AnomalyDetector()
+
+        self.anomaly_detector = AnomalyDetector(
+            window_size=config.anomaly_window,
+            threshold=config.anomaly_threshold,
+            min_samples=config.anomaly_min_samples
+        )
+
         self.last_check_time = time.time()
         self.timer = self.create_timer(5.0, self.collect_metrics)
         os.system('clear')
@@ -43,7 +51,9 @@ class TopicCollector(Node):
 
         active_topics = set()
         for topic_name, topic_types in topic_list:
-            if topic_name.startswith('/rosout') or topic_name.startswith('/parameter'):
+            if topic_name in config.exclude_topics:
+                continue
+            if any(topic_name.startswith(p) for p in config.exclude_topic_prefixes):
                 continue
             if self.count_publishers(topic_name) > 0:
                 active_topics.add(topic_name)

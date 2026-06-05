@@ -7,12 +7,12 @@ from collector.service_collector import ServiceCollector
 from collector.lifecycle_collector import LifecycleCollector
 from collector.graph_collector import GraphCollector, start_api
 from exporter.prometheus_exporter import ROSScopeExporter
-
+from config import config
 
 def main():
     rclpy.init()
 
-    exporter = ROSScopeExporter(port=8000)
+    exporter = ROSScopeExporter(port=config.metrics_port)
     exporter.start()
 
     topic_node = TopicCollector()
@@ -26,7 +26,6 @@ def main():
 
     graph_node = GraphCollector()
 
-    # Start graph API in background
     api_thread = threading.Thread(target=start_api, args=(graph_node,), daemon=True)
     api_thread.start()
 
