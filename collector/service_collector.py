@@ -84,6 +84,7 @@ class ServiceCollector(Node):
 
         if self.exporter:
             self.exporter.update_services(metrics)
+        self.latest_service_metrics = metrics
 
 def main():
     rclpy.init()

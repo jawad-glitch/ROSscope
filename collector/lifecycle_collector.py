@@ -76,6 +76,7 @@ class LifecycleCollector(Node):
         self.get_logger().info(f"Lifecycle status: {metrics}")
         if self.exporter:
             self.exporter.update_lifecycle(metrics)
+        self.latest_lifecycle_metrics = metrics
 
 def main():
     rclpy.init()

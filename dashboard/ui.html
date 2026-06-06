@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROSscope — ROS 2 Observability Platform</title>
+    <style>
+        :root {
+            --bg-main: #0f1115;
+            --bg-card: #1a1f2e;
+            --bg-sidebar: #141822;
+            --bg-hover: #242b3d;
+            --accent: #38bdf8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: #2d3748;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            width: 240px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            padding: 20px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--bg-hover);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background-color: var(--accent);
+            color: var(--bg-main);
+            font-weight: 600;
+        }
+
+        /* Main Workspace Layout */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            height: 65px;
+            background-color: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            flex-shrink: 0;
+        }
+
+        header h1 {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        #clock {
+            color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .content-container {
+            padding: 30px;
+            overflow-y: auto;
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* Stats Grid Layout */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: #3e4c66;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        /* Tables and UI Data Containers */
+        .panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 12px 16px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            transition: background-color 0.15s ease;
+        }
+
+        tbody tr:hover {
+            background-color: var(--bg-hover);
+        }
+
+        /* Badges & Status Indicators */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-danger { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid var(--danger); }
+        .badge-warning { background-color: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid var(--warning); }
+        .badge-success { background-color: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid var(--success); }
+
+        /* Action Controls & Dynamic UI elements */
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        button {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .btn-ack { background-color: var(--warning); color: #000; }
+        .btn-resolve { background-color: var(--success); color: #000; }
+        .btn-submit { background-color: var(--accent); color: #000; }
+
+        .resolve-input-container {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        input[type="text"] {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent);
+        }
+
+        .empty-state {
+            padding: 30px;
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Graph Page Topology Elements */
+        .iframe-container {
+            width: 100%;
+            height: calc(100vh - 210px);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .legend {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            background-color: var(--bg-card);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Global Dynamic Loader Notification */
+        #loader {
+            position: absolute;
+            top: 15px;
+            right: 30px;
+            background: rgba(26, 31, 46, 0.9);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div class="brand">ROSscope</div>
+        <ul class="nav-links">
+            <li class="nav-item active" onclick="switchPage('overview')">Overview</li>
+            <li class="nav-item" onclick="switchPage('topics')">Topics</li>
+            <li class="nav-item" onclick="switchPage('alerts')">Alerts</li>
+            <li class="nav-item" onclick="switchPage('graph')">Graph</li>
+        </ul>
+    </aside>
+
+    <main>
+        <header>
+            <h1 id="page-title">Overview</h1>
+            <div id="loader">Fetching Updates...</div>
+            <div id="clock">--:--:-- --</div>
+        </header>
+
+        <div class="content-container">
+
+            <section id="page-overview" class="page active">
+                <div class="stats-grid">
+                    <div class="stat-card" id="card-alerts">
+                        <span class="stat-label">Active Alerts</span>
+                        <span class="stat-value" id="stat-active-alerts">-</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Active Topics</span>
+                        <span class="stat-value" id="stat-active-topics">-</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Active Services</span>
+                        <span class="stat-value" id="stat-active-services">-</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Managed Nodes</span>
+                        <span class="stat-value" id="stat-managed-nodes">-</span>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">Active Runtime Alerts</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Topic</th>
+                                <th>Z-Score</th>
+                                <th>State</th>
+                                <th>Fired At</th>
+                                <th style="width: 200px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="overview-alerts-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="page-topics" class="page">
+                <div class="panel">
+                    <div class="panel-title">ROS 2 Active Topics</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Topic</th>
+                                <th>Type</th>
+                                <th>Rate (Hz)</th>
+                                <th>Messages</th>
+                                <th>Publishers</th>
+                                <th>Z-Score</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topics-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="page-alerts" class="page">
+                <div class="panel">
+                    <div class="panel-title">Active Alerts</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Topic</th>
+                                <th>Z-Score</th>
+                                <th>State</th>
+                                <th>Fired At</th>
+                                <th>Acknowledged At</th>
+                                <th style="width: 250px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alerts-active-body"></tbody>
+                    </table>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">Resolved History Log</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Topic</th>
+                                <th>Z-Score</th>
+                                <th>Fired At</th>
+                                <th>Resolved At</th>
+                                <th>Resolution Note</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alerts-resolved-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="page-graph" class="page">
+                <div class="legend">
+                    <div class="legend-item"><span class="legend-dot" style="background: #ef4444;"></span> Node (Anomaly)</div>
+                    <div class="legend-item"><span class="legend-dot" style="background: #10b981;"></span> Node (Healthy)</div>
+                    <div class="legend-item"><span class="legend-dot" style="background: #38bdf8;"></span> Active Topic Connection</div>
+                </div>
+                <div class="iframe-container">
+                    <iframe src="http://localhost:8001/graph-viz"></iframe>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = 'http://localhost:8001/api';
+        let currentTab = 'overview';
+        let dataPollInterval = null;
+
+        // Initialize Application
+        window.addEventListener('DOMContentLoaded', () => {
+            updateClock();
+            setInterval(updateClock, 1000);
+            switchPage('overview');
+        });
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toISOString().replace('T', ' ').substring(0, 19);
+        }
+
+        // Tab Switching Engine
+        function switchPage(pageId) {
+            currentTab = pageId;
+            
+            // UI Navigation element swapping
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            
+            const eventTarget = Array.from(document.querySelectorAll('.nav-item'))
+                .find(item => item.innerText.toLowerCase() === pageId);
+            if(eventTarget) eventTarget.classList.add('active');
+            
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            document.getElementById('page-title').innerText = pageId.charAt(0).toUpperCase() + pageId.slice(1);
+
+            // Instant lifecycle data synchronization on navigation change
+            fetchCycleData();
+
+            // Setup loop isolation intervals
+            clearInterval(dataPollInterval);
+            dataPollInterval = setInterval(fetchCycleData, 5000);
+        }
+
+        // Show/Hide network loading element
+        function toggleLoader(show) {
+            document.getElementById('loader').style.display = show ? 'block' : 'none';
+        }
+
+        // Main Fetch Engine Dispatcher
+        async function fetchCycleData() {
+            toggleLoader(true);
+            try {
+                if (currentTab === 'overview') {
+                    await Promise.all([updateOverviewStats(), updateOverviewAlertsTable()]);
+                } else if (currentTab === 'topics') {
+                    await updateTopicsTable();
+                } else if (currentTab === 'alerts') {
+                    await updateAlertsPageTables();
+                }
+            } catch (err) {
+                console.error("Data tracking Synchronization error: ", err);
+            } finally {
+                toggleLoader(false);
+            }
+        }
+
+        // Helper: Format raw JSON timestamps to look cleaner
+        function formatDate(isoString) {
+            if (!isoString) return '-';
+            return isoString.replace('T', ' ').substring(11, 19);
+        }
+
+        // ================= PAGE IMPLEMENTATIONS =================
+
+        async function updateOverviewStats() {
+            const [resAlerts, resTopics, resServices, resNodes] = await Promise.all([
+                fetch(`${API_BASE}/alerts`).then(r => r.json()),
+                fetch(`${API_BASE}/topics`).then(r => r.json()),
+                fetch(`${API_BASE}/services`).then(r => r.json()),
+                fetch(`${API_BASE}/nodes`).then(r => r.json())
+            ]);
+
+            const activeAlertsCount = resAlerts.active ? resAlerts.active.length : 0;
+            const alertCard = document.getElementById('card-alerts');
+            const alertVal = document.getElementById('stat-active-alerts');
+
+            alertVal.innerText = activeAlertsCount;
+            if (activeAlertsCount > 0) {
+                alertCard.style.borderLeft = `4px solid var(--danger)`;
+                alertVal.style.color = `var(--danger)`;
+            } else {
+                alertCard.style.borderLeft = `4px solid var(--success)`;
+                alertVal.style.color = `var(--success)`;
+            }
+
+            document.getElementById('stat-active-topics').innerText = resTopics.topics ? resTopics.topics.length : 0;
+            document.getElementById('stat-active-services').innerText = resServices.services ? resServices.services.length : 0;
+            document.getElementById('stat-managed-nodes').innerText = resNodes.nodes ? resNodes.nodes.length : 0;
+        }
+
+        async function updateOverviewAlertsTable() {
+            const data = await fetch(`${API_BASE}/alerts`).then(r => r.json());
+            const tbody = document.getElementById('overview-alerts-body');
+            tbody.innerHTML = '';
+
+            if(!data.active || data.active.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No currently active alerts detected. Everything nominal.</td></tr>`;
+                return;
+            }
+
+            data.active.forEach(alert => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${alert.topic}</strong></td>
+                    <td style="color: ${alert.z_score >= 3 ? 'var(--danger)' : 'var(--text-main)'}">${alert.z_score}</td>
+                    <td><span class="badge ${alert.state === 'firing' ? 'badge-danger' : 'badge-warning'}">${alert.state}</span></td>
+                    <td>${formatDate(alert.fired_at)}</td>
+                    <td>
+                        <div class="btn-group">
+                            ${alert.state === 'firing' ? `<button class="btn-ack" onclick="postAction('acknowledge', '${alert.id}')">Acknowledge</button>` : ''}
+                            <button class="btn-resolve" onclick="renderInlineResolve(this, '${alert.id}')">Resolve</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function updateTopicsTable() {
+            const data = await fetch(`${API_BASE}/topics`).then(r => r.json());
+            const tbody = document.getElementById('topics-table-body');
+            tbody.innerHTML = '';
+
+            if(!data.topics || data.topics.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No active topics found.</td></tr>`;
+                return;
+            }
+
+            data.topics.forEach(t => {
+                const tr = document.createElement('tr');
+                const badgeClass = t.is_anomaly ? 'badge-danger' : 'badge-success';
+                const badgeLabel = t.is_anomaly ? '⚠ ANOMALY' : 'OK';
+                
+                tr.innerHTML = `
+                    <td><strong>${t.topic}</strong></td>
+                    <td style="color: var(--text-muted); font-size: 0.8rem;">${t.type}</td>
+                    <td>${t.rate.toFixed(2)}</td>
+                    <td>${t.count}</td>
+                    <td>${t.publishers}</td>
+                    <td style="color: ${t.is_anomaly ? 'var(--danger)' : 'var(--text-main)'}">${t.z_score.toFixed(3)}</td>
+                    <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function updateAlertsPageTables() {
+            const data = await fetch(`${API_BASE}/alerts`).then(r => r.json());
+            
+            // Section 1: Active
+            const activeBody = document.getElementById('alerts-active-body');
+            activeBody.innerHTML = '';
+            if(!data.active || data.active.length === 0) {
+                activeBody.innerHTML = `<tr><td colspan="6" class="empty-state">No currently active alerts.</td></tr>`;
+            } else {
+                data.active.forEach(alert => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${alert.topic}</strong></td>
+                        <td>${alert.z_score}</td>
+                        <td><span class="badge ${alert.state === 'firing' ? 'badge-danger' : 'badge-warning'}">${alert.state}</span></td>
+                        <td>${formatDate(alert.fired_at)}</td>
+                        <td>${formatDate(alert.acknowledged_at)}</td>
+                        <td>
+                            <div class="btn-group">
+                                ${alert.state === 'firing' ? `<button class="btn-ack" onclick="postAction('acknowledge', '${alert.id}')">Acknowledge</button>` : ''}
+                                <button class="btn-resolve" onclick="renderInlineResolve(this, '${alert.id}')">Resolve</button>
+                            </div>
+                        </td>
+                    `;
+                    activeBody.appendChild(tr);
+                });
+            }
+
+            // Section 2: History (Resolved Log)
+            const resolvedBody = document.getElementById('alerts-resolved-body');
+            resolvedBody.innerHTML = '';
+            const historicalAlerts = data.all ? data.all.filter(a => a.state === 'resolved') : [];
+            
+            if(historicalAlerts.length === 0) {
+                resolvedBody.innerHTML = `<tr><td colspan="5" class="empty-state">No historical archives available.</td></tr>`;
+            } else {
+                historicalAlerts.forEach(alert => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${alert.topic}</strong></td>
+                        <td>${alert.z_score}</td>
+                        <td>${formatDate(alert.fired_at)}</td>
+                        <td>${formatDate(alert.resolved_at)}</td>
+                        <td style="color: var(--text-muted); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${alert.note || ''}">
+                            ${alert.note || '<span style="font-style:italic; opacity:0.5;">No notes</span>'}
+                        </td>
+                    `;
+                    resolvedBody.appendChild(tr);
+                });
+            }
+        }
+
+        // ================= ACTION OPERATIONS =================
+
+        async function postAction(action, id, params = '') {
+            try {
+                const response = await fetch(`${API_BASE}/alerts/${id}/${action}${params}`, {
+                    method: 'POST'
+                });
+                if(response.ok) {
+                    await fetchCycleData();
+                } else {
+                    alert(`API state operational refusal during process mutation: ${response.statusText}`);
+                }
+            } catch (err) {
+                console.error(`Post tracking execution mutation fault: `, err);
+            }
+        }
+
+        function renderInlineResolve(buttonElement, id) {
+            const cellContainer = buttonElement.parentElement;
+            
+            // Check to avoid creating duplicate resolution inputs
+            if (cellContainer.querySelector('.resolve-input-container')) return;
+
+            const inputWrapper = document.createElement('div');
+            inputWrapper.className = 'resolve-input-container';
+            inputWrapper.innerHTML = `
+                <input type="text" placeholder="Reason note..." id="note-input-${id}">
+                <button class="btn-submit" onclick="submitInlineResolve('${id}')">✔</button>
+            `;
+            cellContainer.appendChild(inputWrapper);
+            const inputField = document.getElementById(`note-input-${id}`);
+            inputField.focus();
+            
+            // Allow submission on enter key press
+            inputField.addEventListener('keypress', (e) => {
+                if(e.key === 'Enter') submitInlineResolve(id);
+            });
+        }
+
+        function submitInlineResolve(id) {
+            const inputField = document.getElementById(`note-input-${id}`);
+            const noteValue = encodeURIComponent(inputField.value.trim());
+            const paramString = noteValue ? `?note=${noteValue}` : '';
+            postAction('resolve', id, paramString);
+        }
+    </script>
+</body>
+</html>

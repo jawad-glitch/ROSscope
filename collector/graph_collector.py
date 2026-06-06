@@ -64,8 +64,8 @@ def health():
     return {"status": "ok", "edges": len(_collector.edges) if _collector else 0}
 
 @app.get("/")
-def serve_graph_ui():
-    html_path = os.path.join(os.path.dirname(__file__), '..', 'dashboard', 'graph.html')
+def serve_ui():
+    html_path = os.path.join(os.path.dirname(__file__), '..', 'dashboard', 'ui.html')
     return FileResponse(html_path)
 
 def start_api(collector_node):
@@ -96,6 +96,32 @@ def resolve_alert(alert_id: str, note: str = None):
     if not success:
         return {"success": False, "error": "Alert not found or already resolved"}
     return {"success": True}
+
+@app.get("/api/topics")
+def get_topics():
+    collector = getattr(_collector, 'topic_collector', None)
+    if not collector:
+        return {"topics": []}
+    return {"topics": getattr(collector, 'latest_metrics', [])}
+
+@app.get("/api/services")
+def get_services():
+    collector = getattr(_collector, 'service_collector', None)
+    if not collector:
+        return {"services": []}
+    return {"services": getattr(collector, 'latest_service_metrics', [])}
+
+@app.get("/api/nodes")
+def get_nodes():
+    collector = getattr(_collector, 'lifecycle_collector', None)
+    if not collector:
+        return {"nodes": []}
+    return {"nodes": getattr(collector, 'latest_lifecycle_metrics', [])}
+
+@app.get("/graph-viz")
+def serve_graph():
+    html_path = os.path.join(os.path.dirname(__file__), '..', 'dashboard', 'graph.html')
+    return FileResponse(html_path)
 
 # ── ROS 2 Node ────
 class GraphCollector(Node):

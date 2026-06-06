@@ -128,6 +128,7 @@ class TopicCollector(Node):
         if self.exporter:
             self.exporter.update(metrics)
         self.render_dashboard(metrics)
+        self.latest_metrics = metrics
 
     def increment_count(self, topic_name):
         if topic_name in self.topic_counts:

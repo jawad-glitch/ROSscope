@@ -25,6 +25,9 @@ def main():
     lifecycle_node.exporter = exporter
 
     graph_node = GraphCollector()
+    graph_node.topic_collector = topic_node
+    graph_node.service_collector = service_node
+    graph_node.lifecycle_collector = lifecycle_node
 
     api_thread = threading.Thread(target=start_api, args=(graph_node,), daemon=True)
     api_thread.start()
