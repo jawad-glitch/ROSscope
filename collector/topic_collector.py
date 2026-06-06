@@ -12,6 +12,7 @@ import tty
 import termios
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import config
+from alerts import alert_manager
 
 class TopicCollector(Node):
     def __init__(self):
@@ -74,6 +75,7 @@ class TopicCollector(Node):
                     self.get_logger().warn(
                         f'ANOMALY DETECTED: {topic_name} dropped to 0Hz (z={z_score})'
                     )
+                    alert_manager.fire(topic_name, z_score)
 
         # Zero out metrics then clean up dead topics
         for topic_name in list(self.topic_counts.keys()):
@@ -108,6 +110,9 @@ class TopicCollector(Node):
 
             is_anomaly, z_score = self.anomaly_detector.check(topic_name, rate)
             self.anomaly_detector.update(topic_name, rate)
+
+            if is_anomaly:
+                alert_manager.fire(topic_name, z_score)
 
             metrics.append({
                 'topic': topic_name,
@@ -144,7 +149,7 @@ class TopicCollector(Node):
             for item in metrics:
                 topic = item['topic'] if len(item['topic']) <= 28 else "..." + item['topic'][-25:]
                 msg_type = item['type'] if len(item['type']) <= 22 else item['type'][:19] + "..."
-                alert = "⚠ YES" if item['is_anomaly'] else "OK"
+                alert = "YES" if item['is_anomaly'] else "OK"
                 sys.stdout.write(row_format.format(
                     topic, msg_type, item['count'], f"{item['rate']}Hz",
                     item['publishers'], item['z_score'], alert

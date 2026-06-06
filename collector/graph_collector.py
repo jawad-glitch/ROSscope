@@ -10,6 +10,7 @@ import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import config
+from alerts import alert_manager
 
 # ── FastAPI setup ────
 app = FastAPI()
@@ -71,6 +72,30 @@ def start_api(collector_node):
     global _collector
     _collector = collector_node
     uvicorn.run(app, host="0.0.0.0", port=config.graph_port, log_level="error")
+
+@app.get("/api/alerts")
+def get_alerts():
+    """Return all active and resolved alerts."""
+    return {
+        "active": alert_manager.get_active(),
+        "all": alert_manager.get_all()
+    }
+
+@app.post("/api/alerts/{alert_id}/acknowledge")
+def acknowledge_alert(alert_id: str):
+    """Acknowledge a firing alert."""
+    success = alert_manager.acknowledge(alert_id)
+    if not success:
+        return {"success": False, "error": "Alert not found or not in firing state"}
+    return {"success": True}
+
+@app.post("/api/alerts/{alert_id}/resolve")
+def resolve_alert(alert_id: str, note: str = None):
+    """Resolve an alert with optional note."""
+    success = alert_manager.resolve(alert_id, note=note)
+    if not success:
+        return {"success": False, "error": "Alert not found or already resolved"}
+    return {"success": True}
 
 # ── ROS 2 Node ────
 class GraphCollector(Node):
