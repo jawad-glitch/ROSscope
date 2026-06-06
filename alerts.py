@@ -2,6 +2,7 @@
 import uuid
 import threading
 from datetime import datetime
+from notifier import notification_manager
 
 
 class AlertManager:
@@ -10,11 +11,11 @@ class AlertManager:
         self._lock = threading.Lock()  # thread safety
 
     def fire(self, topic, z_score):
-        """Create a new firing alert only if no active alert exists for this topic."""
         with self._lock:
+            # Deduplication check
             for alert in self._alerts.values():
                 if alert['topic'] == topic and alert['state'] in ('firing', 'acknowledged'):
-                    return alert['id'] 
+                    return alert['id']
 
             alert_id = str(uuid.uuid4())
             alert = {
@@ -28,7 +29,10 @@ class AlertManager:
                 'note': None
             }
             self._alerts[alert_id] = alert
-            return alert_id
+
+        # Notify outside the lock to avoid blocking
+        notification_manager.notify(alert)
+        return alert_id
 
     def acknowledge(self, alert_id):
         """Transition firing → acknowledged."""
