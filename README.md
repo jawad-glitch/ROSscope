@@ -2,7 +2,7 @@
  
 > Open source observability platform for ROS 2 robot fleets.
  
-ROSscope gives robotics engineers real-time visibility into their ROS 2 systems — topic health, service availability, node lifecycle states, inter-node relationships, anomaly detection, and alert management. Think Datadog, built for robots.
+ROSscope gives robotics engineers real-time visibility into their ROS 2 systems topic health, service availability, node lifecycle states, inter-node relationships, anomaly detection, and alert management. Think Datadog, built for robots.
  
 [![Docker Pulls](https://img.shields.io/docker/pulls/jawadglitch/rosscope)](https://hub.docker.com/r/jawadglitch/rosscope)
 [![GitHub release](https://img.shields.io/github/v/release/jawad-glitch/ROSscope)](https://github.com/jawad-glitch/ROSscope/releases)
