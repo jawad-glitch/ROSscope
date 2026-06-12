@@ -1,6 +1,6 @@
 services:
   collector:
-    image: jawadglitch/rosscope:latest
+    image: jawad132/rosscope:latest
     container_name: rosscope_collector
     network_mode: host
     environment:

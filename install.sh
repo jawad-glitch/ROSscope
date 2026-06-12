@@ -1,8 +1,13 @@
 #!/bin/bash
 set -e
 
+VERSION=$(curl -s https://api.github.com/repos/jawad-glitch/ROSscope/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
+if [ -z "$VERSION" ]; then
+    VERSION="latest"
+fi
+
 echo "======================================"
-echo "  ROSscope — Installing v0.1.0"
+echo "  ROSscope — Installing ${VERSION}"
 echo "======================================"
 
 # Create rosscope directory
@@ -30,15 +35,17 @@ docker compose -f docker-compose.prod.yml up -d
 
 echo ""
 echo "======================================"
-echo "  ROSscope is running!"
+echo "  ROSscope ${VERSION} is running!"
 echo "======================================"
 echo "  UI:      http://localhost:8001"
-echo "  Grafana: http://localhost:3000"
-echo "  Metrics: http://localhost:8000/metrics"
+echo "  Grafana: http://localhost:3000  (admin / rosscope)"
+echo "  Metrics: http://localhost:8001/metrics"
 echo ""
-echo "  Start your ROS 2 nodes and ROSscope"
-echo "  will detect them automatically."
+echo "  ROSscope will automatically detect"
+echo "  your ROS 2 nodes and topics."
 echo ""
-echo "  To start the collector:"
-echo "  cd rosscope && python3 main.py"
+echo "  Useful commands:"
+echo "  docker logs rosscope_collector     # collector logs"
+echo "  docker logs rosscope_prometheus    # prometheus logs"
+echo "  docker compose -f docker-compose.prod.yml down  # stop"
 echo "======================================"
