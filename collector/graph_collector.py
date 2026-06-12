@@ -14,6 +14,7 @@ from alerts import alert_manager
 from collector.registry import registry
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from fastapi.responses import Response, FileResponse
+from correlator import correlate
 
 # ── FastAPI setup ────
 app = FastAPI()
@@ -87,6 +88,10 @@ def resolve_alert(alert_id: str, note: str = None):
     if not success:
         return {"success": False, "error": "Alert not found or already resolved"}
     return {"success": True}
+
+@app.get("/api/alerts/{alert_id}/correlate")
+def correlate_alert(alert_id: str):
+    return correlate(alert_id)
 
 @app.get("/api/topics")
 def get_topics():
