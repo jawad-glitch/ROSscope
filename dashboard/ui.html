@@ -339,6 +339,7 @@
             <li class="nav-item" onclick="switchPage('topics')">Topics</li>
             <li class="nav-item" onclick="switchPage('alerts')">Alerts</li>
             <li class="nav-item" onclick="switchPage('graph')">Graph</li>
+            <li class="nav-item" onclick="switchPage('services')">Services</li>
         </ul>
     </aside>
 
@@ -453,6 +454,24 @@
                     <iframe src="http://localhost:8001/graph-viz"></iframe>
                 </div>
             </section>
+            
+            <section id="page-services" class="page">
+                <div class="panel">
+                    <div class="panel-title">ROS 2 Active Services</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Type</th>
+                                <th>Servers</th>
+                                <th>Response Time (ms)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="services-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
 
         </div>
     </main>
@@ -512,6 +531,8 @@
                     await updateTopicsTable();
                 } else if (currentTab === 'alerts') {
                     await updateAlertsPageTables();
+                } else if (currentTab === 'services') {
+                    await updateServicesTable();
                 }
             } catch (err) {
                 console.error("Data tracking Synchronization error: ", err);
@@ -604,6 +625,32 @@
                     <td>${t.count}</td>
                     <td>${t.publishers}</td>
                     <td style="color: ${t.is_anomaly ? 'var(--danger)' : 'var(--text-main)'}">${t.z_score.toFixed(3)}</td>
+                    <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function updateServicesTable() {
+            const data = await fetch(`${API_BASE}/services`).then(r => r.json());
+            const tbody = document.getElementById('services-table-body');
+            tbody.innerHTML = '';
+
+            if (!data.services || data.services.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No active services found.</td></tr>`;
+                return;
+            }
+
+            data.services.forEach(s => {
+                const tr = document.createElement('tr');
+                const badgeClass = s.healthy ? 'badge-success' : 'badge-danger';
+                const badgeLabel = s.healthy ? 'HEALTHY' : 'UNAVAILABLE';
+
+                tr.innerHTML = `
+                    <td><strong>${s.service}</strong></td>
+                    <td style="color: var(--text-muted); font-size: 0.8rem;">${s.type}</td>
+                    <td>${s.server_count}</td>
+                    <td>${s.response_time_ms !== null ? s.response_time_ms.toFixed(2) : '-'}</td>
                     <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
                 `;
                 tbody.appendChild(tr);

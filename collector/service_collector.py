@@ -76,10 +76,11 @@ class ServiceCollector(Node):
                 server_available = 0
 
             metrics.append({
-                'Service': service_name,
-                'Service_type': type_str,
-                'response_time': 0.0,
-                'server_count': server_available
+                'service': service_name,
+                'type': type_str,
+                'response_time_ms': 0.0,
+                'server_count': server_available,
+                'healthy': server_available == 1
             })
 
         if self.exporter:
