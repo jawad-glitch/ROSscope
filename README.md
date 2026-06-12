@@ -2,7 +2,7 @@
 
 > Open source observability platform for ROS 2 robot fleets.
 
-ROSscope gives robotics engineers real-time visibility into their ROS 2 systems — topic health, service availability, node lifecycle states, inter-node relationships, anomaly detection, and alert management. Think Datadog, built for robots.
+ROSscope gives robotics engineers real-time visibility into their ROS 2 systems - topic health, service availability, node lifecycle states, inter-node relationships, anomaly detection, and alert management. Think Datadog, built for robots.
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/jawad132/rosscope)](https://hub.docker.com/r/jawad132/rosscope)
 [![GitHub release](https://img.shields.io/github/v/release/jawad-glitch/ROSscope)](https://github.com/jawad-glitch/ROSscope/releases)
@@ -46,9 +46,9 @@ ROSscope fixes that.
 
 ### One-line install (recommended)
 
-\`\`\`bash
+```bash
 curl -sSL https://raw.githubusercontent.com/jawad-glitch/ROSscope/main/install.sh | bash
-\`\`\`
+```
 
 This downloads all config files, starts Prometheus + Grafana, and runs the collector automatically.
 
@@ -59,17 +59,17 @@ This downloads all config files, starts Prometheus + Grafana, and runs the colle
 - ROS 2 Humble (Ubuntu 22.04)
 - Python 3.10+
 
-\`\`\`bash
+```bash
 git clone https://github.com/jawad-glitch/ROSscope.git
 cd ROSscope
 ./start.sh
-\`\`\`
+```
 
 ### Docker image
 
-\`\`\`bash
+```bash
 docker pull jawad132/rosscope:latest
-\`\`\`
+```
 
 ---
 
@@ -88,7 +88,7 @@ docker pull jawad132/rosscope:latest
 
 ## Architecture
 
-\`\`\`
+```
 Your ROS 2 Robot Fleet
         │
         ▼
@@ -113,15 +113,15 @@ Your ROS 2 Robot Fleet
            │
            ▼
       Grafana :3000
-\`\`\`
+```
 
 ---
 
 ## Configuration
 
-Edit \`rosscope.yaml\` to customize behavior — no code changes needed:
+Edit `rosscope.yaml` to customize behavior - no code changes needed:
 
-\`\`\`yaml
+```yaml
 rosscope:
   # Collection
   collection_interval: 5        # seconds between metric scans
@@ -159,7 +159,7 @@ rosscope:
 
   # Grafana
   grafana_password: rosscope
-\`\`\`
+```
 
 ---
 
@@ -167,10 +167,10 @@ rosscope:
 
 ROSscope uses a **z-score rolling window** to detect topic rate anomalies automatically — no manual threshold configuration needed.
 
-\`\`\`
+```
 z = |current_rate - rolling_mean| / rolling_std
 anomaly flagged if z > 3.0
-\`\`\`
+```
 
 - Window: 60 readings (~5 minutes at 5s intervals)
 - Minimum baseline: 10 readings before detection activates
@@ -183,15 +183,15 @@ anomaly flagged if z > 3.0
 
 Every anomaly creates an alert with a full lifecycle, persisted to disk:
 
-\`\`\`
+```
 firing → acknowledged → resolved
-\`\`\`
+```
 
-Alerts survive process restarts — full history is always available.
+Alerts survive process restarts - full history is always available.
 
-Manage alerts via the web UI at \`http://localhost:8001\` or directly via API:
+Manage alerts via the web UI at `http://localhost:8001` or directly via API:
 
-\`\`\`bash
+```bash
 # List active alerts
 curl http://localhost:8001/api/alerts
 
@@ -203,7 +203,7 @@ curl -X POST "http://localhost:8001/api/alerts/{id}/resolve?note=Sensor+restarte
 
 # Root cause correlation
 curl http://localhost:8001/api/alerts/{id}/correlate
-\`\`\`
+```
 
 ---
 
@@ -211,11 +211,11 @@ curl http://localhost:8001/api/alerts/{id}/correlate
 
 When an alert fires, ROSscope traces the failure cascade upstream through the computation graph to find the origin node:
 
-\`\`\`bash
+```bash
 curl http://localhost:8001/api/alerts/{id}/correlate
-\`\`\`
+```
 
-\`\`\`json
+```json
 {
   "alert_id": "abc-123",
   "topic": "/detections",
@@ -223,7 +223,7 @@ curl http://localhost:8001/api/alerts/{id}/correlate
   "path": ["/detections", "object_detector", "/image_raw", "camera_node"],
   "confidence": "upstream alert fired 12s earlier"
 }
-\`\`\`
+```
 
 Uses a backwards BFS traversal — starting from the anomalous topic, walking publisher/subscriber edges upstream, checking alert timestamps at each step.
 
@@ -233,11 +233,11 @@ Uses a backwards BFS traversal — starting from the anomalous topic, walking pu
 
 ROSscope maps live publisher/subscriber relationships across your entire ROS 2 system:
 
-\`\`\`bash
+```bash
 curl http://localhost:8001/api/graph
-\`\`\`
+```
 
-\`\`\`json
+```json
 {
   "nodes": [
     {"id": "camera_node", "type": "node"},
@@ -248,9 +248,9 @@ curl http://localhost:8001/api/graph
     {"source": "/image_raw", "target": "object_detector", "type": "subscribes"}
   ]
 }
-\`\`\`
+```
 
-The graph visualization at \`http://localhost:8001\` renders this as an interactive force-directed graph with drag, zoom, search, and connection highlighting.
+The graph visualization at `http://localhost:8001` renders this as an interactive force-directed graph with drag, zoom, search, and connection highlighting.
 
 ---
 
@@ -276,7 +276,7 @@ The graph visualization at \`http://localhost:8001\` renders this as an interact
 
 ## Project Structure
 
-\`\`\`
+```
 ROSscope/
 ├── collector/
 │   ├── topic_collector.py       # DDS topic scanning + Hz measurement
@@ -311,7 +311,7 @@ ROSscope/
 ├── start.sh                     # One-command startup
 ├── stop.sh                      # One-command shutdown
 └── install.sh                   # One-line install for new users
-\`\`\`
+```
 
 ---
 
@@ -355,11 +355,11 @@ ROSscope/
 
 Contributions welcome. Open an issue first to discuss what you'd like to change.
 
-\`\`\`bash
+```bash
 git clone https://github.com/jawad-glitch/ROSscope.git
 cd ROSscope
 ./start.sh
-\`\`\`
+```
 
 ---
 
@@ -373,4 +373,4 @@ muhammadjawadok@gmail.com
 
 ## License
 
-MIT License — use it, fork it, build on it.
+MIT License - use it, fork it, build on it.
