@@ -96,7 +96,7 @@ class TimeScaleWriter:
 
     def _write_topics(self, metrics, ts):
         rows = [(ts, m['topic'], m['type'], m['rate'],
-                 m['count'], m['publishers'], m['is_anomaly'], m['z_score'])
+                 m['count'], m['publishers'], bool(m['is_anomaly']), m['z_score'])
                 for m in metrics]
         with self._conn.cursor() as cur:
             execute_values(cur,
@@ -106,8 +106,11 @@ class TimeScaleWriter:
         self._conn.commit()
 
     def _write_services(self, metrics, ts):
-        rows = [(ts, m['service'], m['type'], m['response_time_ms'],
-                 m['server_count'], m['healthy'])
+        rows = [(ts, m.get('service', m.get('Service', '')), 
+                m.get('service_type', m.get('Service_type', '')),
+                m.get('response_time', 0.0),
+                m.get('server_count', 0),
+                m.get('server_count', 0) > 0)
                 for m in metrics]
         with self._conn.cursor() as cur:
             execute_values(cur,

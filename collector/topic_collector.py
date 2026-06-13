@@ -21,6 +21,7 @@ class TopicCollector(Node):
         self.topic_types = {}
         self.subscribers = {}
         self.exporter = None
+        self.db = None
 
         self.anomaly_detector = AnomalyDetector(
             window_size=config.anomaly_window,
@@ -129,6 +130,9 @@ class TopicCollector(Node):
             self.exporter.update(metrics)
         self.render_dashboard(metrics)
         self.latest_metrics = metrics
+        
+        if self.db:
+            self.db.write_topics(metrics)
 
     def increment_count(self, topic_name):
         if topic_name in self.topic_counts:

@@ -21,8 +21,7 @@ class ServiceCollector(Node):
         self.service_status = {}
         self.exporter = None
         self.service_clients = {}
-        
-        # Timer - check the services every 5 seconds
+        self.db = None
         self.timer = self.create_timer(5.0, self.collect_metrics)
 
     def is_safe_to_probe(self, service_type_str):
@@ -97,6 +96,9 @@ class ServiceCollector(Node):
         self.latest_service_metrics = metrics
         if self.exporter:
             self.exporter.update_services(metrics)
+
+        if self.db:
+            self.db.write_services(metrics)
         
 def main():
     rclpy.init()

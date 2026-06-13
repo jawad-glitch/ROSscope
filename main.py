@@ -22,12 +22,15 @@ def main():
 
     topic_node = TopicCollector()
     topic_node.exporter = exporter
+    topic_node.db = db
 
     service_node = ServiceCollector()
     service_node.exporter = exporter
+    service_node.db = db
 
     lifecycle_node = LifecycleCollector()
     lifecycle_node.exporter = exporter
+    lifecycle_node.db = db
 
     graph_node = GraphCollector()
 

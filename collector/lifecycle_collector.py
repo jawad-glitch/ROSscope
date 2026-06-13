@@ -26,6 +26,7 @@ class LifecycleCollector(Node):
         self.exporter = exporter
         self.node_clients = {}
         self.timer = self.create_timer(5.0, self.collect_metrics)
+        self.db = None
 
     def discover_managed_nodes(self):
         """Find all lifecycle managed nodes by scanning for /get_state services."""
@@ -77,6 +78,9 @@ class LifecycleCollector(Node):
         if self.exporter:
             self.exporter.update_lifecycle(metrics)
         self.latest_lifecycle_metrics = metrics
+
+        if self.db:
+            self.db.write_nodes(metrics)
 
 def main():
     rclpy.init()
