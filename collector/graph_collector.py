@@ -93,6 +93,20 @@ def resolve_alert(alert_id: str, note: str = None):
 def correlate_alert(alert_id: str):
     return correlate(alert_id)
 
+@app.get("/api/history/topics")
+def get_topic_history(topic: str = None, minutes: int = 60):
+    from collector.registry import registry
+    if not registry.topic or not registry.topic.db:
+        return {"events": []}
+    return {"events": registry.topic.db.get_topic_history(topic, minutes)}
+
+@app.get("/api/history/anomalies")
+def get_anomaly_events(minutes: int = 60):
+    from collector.registry import registry
+    if not registry.topic or not registry.topic.db:
+        return {"events": []}
+    return {"events": registry.topic.db.get_anomaly_events(minutes)}
+
 @app.get("/api/topics")
 def get_topics():
     if not registry.topic:

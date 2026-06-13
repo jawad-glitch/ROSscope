@@ -2,14 +2,13 @@
 import uuid
 import threading
 from datetime import datetime
-
-
-# ── Alert Manager ──────────────────────────────────────────────
+from notifier import notification_manager
 
 class AlertManager:
     def __init__(self):
         self._alerts = {}
         self._lock = threading.Lock()
+        self.db = None
 
     def fire(self, topic, z_score):
         """Create a new firing alert only if no active alert exists for this topic."""
@@ -31,8 +30,9 @@ class AlertManager:
             }
             self._alerts[alert_id] = alert
 
-        from notifier import notification_manager
         notification_manager.notify(alert)
+        if self.db:
+            self.db.save_alert(alert)
         return alert_id
 
     def acknowledge(self, alert_id):
@@ -42,6 +42,8 @@ class AlertManager:
                 return False
             alert['state'] = 'acknowledged'
             alert['acknowledged_at'] = datetime.utcnow().isoformat()
+            if self.db:
+                self.db.save_alert(self._alerts[alert_id])
         return True
 
     def resolve(self, alert_id, note=None):
@@ -52,7 +54,18 @@ class AlertManager:
             alert['state'] = 'resolved'
             alert['resolved_at'] = datetime.utcnow().isoformat()
             alert['note'] = note
+            if self.db:
+                self.db.save_alert(self._alerts[alert_id])
         return True
+
+    def load_from_db(self, db):
+        """Load unresolved alerts from DB on startup."""
+        self.db = db
+        unresolved = db.load_unresolved_alerts()
+        with self._lock:
+            for alert in unresolved:
+                self._alerts[alert['id']] = alert
+        print(f"[ROSscope] Loaded {len(unresolved)} unresolved alerts from DB")
 
     def get_active(self):
         with self._lock:
@@ -66,10 +79,7 @@ class AlertManager:
         with self._lock:
             return self._alerts.get(alert_id)
 
-
-# Singleton
 alert_manager = AlertManager()
-
 
 # ── Root Cause Correlation ──────────────────────────────────────
 

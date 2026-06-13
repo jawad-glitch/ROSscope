@@ -75,6 +75,18 @@ class TimeScaleWriter:
                 );
             """)
             cur.execute("""
+                CREATE TABLE IF NOT EXISTS alerts (
+                    id           TEXT PRIMARY KEY,
+                    topic        TEXT NOT NULL,
+                    z_score      DOUBLE PRECISION,
+                    state        TEXT NOT NULL,
+                    fired_at     TIMESTAMPTZ NOT NULL,
+                    acknowledged_at TIMESTAMPTZ,
+                    resolved_at  TIMESTAMPTZ,
+                    note         TEXT
+                );
+            """)
+            cur.execute("""
                 SELECT create_hypertable('node_metrics', 'time',
                     if_not_exists => TRUE);
             """)
@@ -151,6 +163,119 @@ class TimeScaleWriter:
                     self._conn.autocommit = False
                 except Exception:
                     pass
+    
+    def save_alert(self, alert):
+        """Insert or update an alert in the DB."""
+        if self._conn is None:
+            return
+        try:
+            with self._conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO alerts (id, topic, z_score, state, fired_at, acknowledged_at, resolved_at, note)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (id) DO UPDATE SET
+                        state = EXCLUDED.state,
+                        acknowledged_at = EXCLUDED.acknowledged_at,
+                        resolved_at = EXCLUDED.resolved_at,
+                        note = EXCLUDED.note
+                """, (
+                    alert['id'], alert['topic'], alert['z_score'],
+                    alert['state'], alert['fired_at'],
+                    alert.get('acknowledged_at'),
+                    alert.get('resolved_at'),
+                    alert.get('note')
+                ))
+            self._conn.commit()
+        except Exception as e:
+            print(f"[ROSscope] Alert save error: {e}")
+
+    def load_unresolved_alerts(self):
+        """Load firing and acknowledged alerts on startup."""
+        if self._conn is None:
+            return []
+        try:
+            with self._conn.cursor() as cur:
+                cur.execute("""
+                    SELECT id, topic, z_score, state, fired_at,
+                        acknowledged_at, resolved_at, note
+                    FROM alerts
+                    WHERE state IN ('firing', 'acknowledged')
+                    ORDER BY fired_at DESC
+                """)
+                rows = cur.fetchall()
+                return [{
+                    'id': r[0], 'topic': r[1], 'z_score': r[2],
+                    'state': r[3],
+                    'fired_at': r[4].isoformat() if r[4] else None,
+                    'acknowledged_at': r[5].isoformat() if r[5] else None,
+                    'resolved_at': r[6].isoformat() if r[6] else None,
+                    'note': r[7]
+                } for r in rows]
+        except Exception as e:
+            print(f"[ROSscope] Alert load error: {e}")
+            return []
+
+    def get_topic_history(self, topic=None, minutes=60):
+        """Get topic metrics history."""
+        if self._conn is None:
+            return []
+        try:
+            with self._conn.cursor() as cur:
+                if topic:
+                    cur.execute("""
+                        SELECT time, topic, rate_hz, msg_count, pub_count, is_anomaly, z_score
+                        FROM topic_metrics
+                        WHERE time > NOW() - INTERVAL '%s minutes'
+                        AND topic = %s
+                        ORDER BY time DESC
+                        LIMIT 200
+                    """, (minutes, topic))
+                else:
+                    cur.execute("""
+                        SELECT time, topic, rate_hz, msg_count, pub_count, is_anomaly, z_score
+                        FROM topic_metrics
+                        WHERE time > NOW() - INTERVAL '%s minutes'
+                        ORDER BY time DESC
+                        LIMIT 200
+                    """, (minutes,))
+                rows = cur.fetchall()
+                return [{
+                    'time': r[0].isoformat(),
+                    'topic': r[1],
+                    'rate_hz': r[2],
+                    'msg_count': r[3],
+                    'pub_count': r[4],
+                    'is_anomaly': r[5],
+                    'z_score': r[6]
+                } for r in rows]
+        except Exception as e:
+            print(f"[ROSscope] History query error: {e}")
+            return []
+
+    def get_anomaly_events(self, minutes=60):
+        """Get all anomaly events in the last N minutes."""
+        if self._conn is None:
+            return []
+        try:
+            with self._conn.cursor() as cur:
+                cur.execute("""
+                    SELECT time, topic, rate_hz, z_score
+                    FROM topic_metrics
+                    WHERE is_anomaly = true
+                    AND time > NOW() - INTERVAL '%s minutes'
+                    ORDER BY time DESC
+                    LIMIT 100
+                """, (minutes,))
+                rows = cur.fetchall()
+                return [{
+                    'time': r[0].isoformat(),
+                    'topic': r[1],
+                    'rate_hz': r[2],
+                    'z_score': r[3]
+                } for r in rows]
+        except Exception as e:
+            print(f"[ROSscope] Anomaly query error: {e}")
+            return []
 
     def start(self):
         """Start the background writer thread."""

@@ -10,6 +10,8 @@ from exporter.prometheus_exporter import ROSScopeExporter
 from config import config
 from collector.registry import registry
 from database import TimeScaleWriter
+from alerts import alert_manager
+
 
 def main():
     rclpy.init()
@@ -19,6 +21,7 @@ def main():
     db = TimeScaleWriter()
     if db.connect():
         db.start()
+        alert_manager.load_from_db(db)
 
     topic_node = TopicCollector()
     topic_node.exporter = exporter
@@ -61,6 +64,7 @@ def main():
         graph_node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()
+        db.stop()
         print("[ROSscope] Shut down cleanly.")
 
 
