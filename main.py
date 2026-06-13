@@ -9,11 +9,16 @@ from collector.graph_collector import GraphCollector, start_api
 from exporter.prometheus_exporter import ROSScopeExporter
 from config import config
 from collector.registry import registry
+from database import TimeScaleWriter
 
 def main():
     rclpy.init()
 
-    exporter = ROSScopeExporter()h
+    exporter = ROSScopeExporter()
+
+    db = TimeScaleWriter()
+    if db.connect():
+        db.start()
 
     topic_node = TopicCollector()
     topic_node.exporter = exporter

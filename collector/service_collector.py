@@ -53,10 +53,19 @@ class ServiceCollector(Node):
         return None
 
     def collect_metrics(self):
-        """Discover services and track server counts."""
         service_list = self.get_service_names_and_types()
-        metrics = []
+        
+        current_services = {
+            name for name, _ in service_list
+            if name not in config.exclude_topics
+            and not any(name.startswith(p) for p in config.exclude_topic_prefixes)
+        }
 
+        for service_name in list(self.service_clients.keys()):
+            if service_name not in current_services:
+                del self.service_clients[service_name]
+
+        metrics = []
         for service_name, service_types in service_list:
             if service_name in config.exclude_topics:
                 continue
@@ -75,18 +84,20 @@ class ServiceCollector(Node):
             except Exception:
                 server_available = 0
 
+            if server_available == 0:
+                continue
+
             metrics.append({
                 'service': service_name,
-                'type': type_str,
-                'response_time_ms': 0.0,
-                'server_count': server_available,
-                'healthy': server_available == 1
+                'service_type': type_str,
+                'response_time': 0.0,
+                'server_count': server_available
             })
 
+        self.latest_service_metrics = metrics
         if self.exporter:
             self.exporter.update_services(metrics)
-        self.latest_service_metrics = metrics
-
+        
 def main():
     rclpy.init()
     node = ServiceCollector()

@@ -14,7 +14,7 @@ from alerts import alert_manager
 from collector.registry import registry
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from fastapi.responses import Response, FileResponse
-from correlator import correlate
+from alerts import correlate
 
 # ── FastAPI setup ────
 app = FastAPI()

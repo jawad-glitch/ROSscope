@@ -1,4 +1,15 @@
 services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: rosscope_timescaledb
+    network_mode: host
+    environment:
+      - POSTGRES_USER=rosscope
+      - POSTGRES_PASSWORD=rosscope
+      - POSTGRES_DB=rosscope
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+
   prometheus:
     image: prom/prometheus:latest
     container_name: rosscope_prometheus
@@ -24,3 +35,4 @@ services:
 volumes:
   prometheus_data:
   grafana_data:
+  timescaledb_data:

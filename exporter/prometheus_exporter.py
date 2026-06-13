@@ -80,11 +80,13 @@ class ROSScopeExporter:
     def update_services(self, metrics):
         self.active_services_total.set(len(metrics))
         for item in metrics:
-            service = item['service']
-            stype = item['type']
-            self.service_response_time.labels(service=service, service_type=stype).set(item['response_time_ms'])
+            service = item.get('service', item.get('Service', ''))
+            stype = item.get('service_type', item.get('Service_type', ''))
+            self.service_response_time.labels(service=service, service_type=stype).set(
+                item.get('response_time', 0.0)
+            )
             self.service_healthy.labels(service=service, service_type=stype).set(
-                1.0 if item['healthy'] else 0.0
+                1.0 if item.get('response_time', 0.0) > 0 else 0.0
             )
             self.service_server_count.labels(service=service, service_type=stype).set(
                 item.get('server_count', 0)
