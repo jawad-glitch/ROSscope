@@ -1,3 +1,15 @@
+# ROSscope Production Stack
+# Runs: Prometheus, Grafana, TimescaleDB
+#
+# The ROSscope collector runs natively on the host (not in Docker)
+# because it needs direct access to the ROS 2 DDS middleware.
+#
+# Quickstart:
+#   1. docker compose -f docker-compose.prod.yml up -d
+#   2. pip3 install -r requirements.txt
+#   3. source /opt/ros/humble/setup.bash
+#   4. python3 main.py
+
 services:
   timescaledb:
     image: timescale/timescaledb:latest-pg16
@@ -9,17 +21,6 @@ services:
       - POSTGRES_DB=rosscope
     volumes:
       - timescaledb_data:/var/lib/postgresql/data
-
-  collector:
-    image: jawad132/rosscope:latest
-    container_name: rosscope_collector
-    network_mode: host
-    environment:
-      - ROS_DOMAIN_ID=0
-    volumes:
-      - ./rosscope.yaml:/rosscope/rosscope.yaml
-    depends_on:
-      - timescaledb
 
   prometheus:
     image: prom/prometheus:latest
