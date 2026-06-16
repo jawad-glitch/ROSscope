@@ -357,8 +357,13 @@
             });
         }
 
-        // ── ALERTS ──
         async function fetchAlerts() {
+            // Save open correlation panels before re-render
+            const openCorrelations = new Set();
+            document.querySelectorAll('[id^="corr-row-"]').forEach(row => {
+                openCorrelations.add(row.id.replace('corr-row-', ''));
+            });
+
             const data = await fetch(`${API}/alerts`).then(r=>r.json());
 
             // Active
@@ -385,6 +390,14 @@
                         </td>`;
                     activeBody.appendChild(tr);
                 });
+
+                // Restore open correlation panels after re-render
+                for (const alertId of openCorrelations) {
+                    const alertRow = document.getElementById(`alert-row-${alertId}`);
+                    if (alertRow && !document.getElementById(`corr-row-${alertId}`)) {
+                        await toggleCorrelate(alertId);
+                    }
+                }
             }
 
             // Resolved
