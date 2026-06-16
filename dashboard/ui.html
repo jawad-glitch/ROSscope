@@ -19,339 +19,95 @@
             --text-muted: #9ca3af;
             --border: #2d3748;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Sidebar Navigation */
-        aside {
-            width: 240px;
-            background-color: var(--bg-sidebar);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-        }
-
-        .brand {
-            padding: 20px;
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            color: var(--accent);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .nav-links {
-            list-style: none;
-            padding: 20px 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .nav-item {
-            padding: 12px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item:hover {
-            background-color: var(--bg-hover);
-            color: var(--text-main);
-        }
-
-        .nav-item.active {
-            background-color: var(--accent);
-            color: var(--bg-main);
-            font-weight: 600;
-        }
-
-        /* Main Workspace Layout */
-        main {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        header {
-            height: 65px;
-            background-color: var(--bg-sidebar);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 30px;
-            flex-shrink: 0;
-        }
-
-        header h1 {
-            font-size: 1.15rem;
-            font-weight: 600;
-        }
-
-        #clock {
-            color: var(--text-muted);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .content-container {
-            padding: 30px;
-            overflow-y: auto;
-            flex-grow: 1;
-            position: relative;
-        }
-
-        .page {
-            display: none;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .page.active {
-            display: flex;
-        }
-
-        /* Stats Grid Layout */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .stat-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            position: relative;
-            overflow: hidden;
-            transition: border-color 0.2s;
-        }
-
-        .stat-card:hover {
-            border-color: #3e4c66;
-        }
-
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        /* Tables and UI Data Containers */
-        .panel {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        .panel-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text-main);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th {
-            padding: 12px 16px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            border-bottom: 2px solid var(--border);
-        }
-
-        td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.9rem;
-            vertical-align: middle;
-        }
-
-        tbody tr {
-            transition: background-color 0.15s ease;
-        }
-
-        tbody tr:hover {
-            background-color: var(--bg-hover);
-        }
-
-        /* Badges & Status Indicators */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .badge-danger { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid var(--danger); }
-        .badge-warning { background-color: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid var(--warning); }
-        .badge-success { background-color: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid var(--success); }
-
-        /* Action Controls & Dynamic UI elements */
-        .btn-group {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        button {
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: opacity 0.2s;
-        }
-
-        button:hover {
-            opacity: 0.85;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+        aside { width: 240px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+        .brand { padding: 20px; font-size: 1.25rem; font-weight: 700; letter-spacing: 0.05em; color: var(--accent); border-bottom: 1px solid var(--border); }
+        .nav-links { list-style: none; padding: 20px 10px; display: flex; flex-direction: column; gap: 8px; }
+        .nav-item { padding: 12px 16px; border-radius: 6px; cursor: pointer; color: var(--text-muted); font-weight: 500; transition: all 0.2s ease; }
+        .nav-item:hover { background-color: var(--bg-hover); color: var(--text-main); }
+        .nav-item.active { background-color: var(--accent); color: var(--bg-main); font-weight: 600; }
+        main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        header { height: 65px; background-color: var(--bg-sidebar); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 0 30px; flex-shrink: 0; }
+        header h1 { font-size: 1.15rem; font-weight: 600; }
+        .header-controls { display: flex; align-items: center; gap: 20px; }
+        #clock { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+        .filter-select { background-color: var(--bg-main); border: 1px solid var(--border); color: var(--text-main); padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 500; outline: none; cursor: pointer; }
+        .content-container { padding: 30px; overflow-y: auto; flex-grow: 1; position: relative; }
+        .page { display: none; flex-direction: column; gap: 24px; }
+        .page.active { display: flex; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .stat-card { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 8px; transition: border-color 0.2s; }
+        .stat-label { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-value { font-size: 2rem; font-weight: 700; }
+        .panel { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+        .panel-title { font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: var(--text-main); }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; font-weight: 600; border-bottom: 2px solid var(--border); }
+        td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 0.9rem; vertical-align: middle; }
+        tbody tr { transition: background-color 0.15s ease; }
+        tbody tr:hover { background-color: var(--bg-hover); }
+        .badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .badge-danger { background-color: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid var(--danger); }
+        .badge-warning { background-color: rgba(245,158,11,0.15); color: var(--warning); border: 1px solid var(--warning); }
+        .badge-success { background-color: rgba(16,185,129,0.15); color: var(--success); border: 1px solid var(--success); }
+        .btn-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        button { padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none; transition: opacity 0.2s; }
+        button:hover { opacity: 0.85; }
         .btn-ack { background-color: var(--warning); color: #000; }
         .btn-resolve { background-color: var(--success); color: #000; }
         .btn-submit { background-color: var(--accent); color: #000; }
-
-        .resolve-input-container {
-            display: flex;
-            gap: 6px;
-            margin-top: 4px;
-        }
-
-        input[type="text"] {
-            background-color: var(--bg-main);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            outline: none;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--accent);
-        }
-
-        .empty-state {
-            padding: 30px;
-            text-align: center;
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
-        /* Graph Page Topology Elements */
-        .iframe-container {
-            width: 100%;
-            height: calc(100vh - 210px);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: #fff;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .legend {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 12px;
-            background-color: var(--bg-card);
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            font-size: 0.85rem;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .legend-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        /* Global Dynamic Loader Notification */
-        #loader {
-            position: absolute;
-            top: 15px;
-            right: 30px;
-            background: rgba(26, 31, 46, 0.9);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            display: none;
-            pointer-events: none;
-        }
+        .btn-correlate { background-color: #2563eb; color: #fff; }
+        .resolve-input-container { display: flex; gap: 6px; margin-top: 4px; }
+        input[type="text"] { background-color: var(--bg-main); border: 1px solid var(--border); color: var(--text-main); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; outline: none; }
+        input[type="text"]:focus { border-color: var(--accent); }
+        .empty-state { padding: 30px; text-align: center; color: var(--text-muted); font-style: italic; }
+        .correlation-row { background-color: rgba(15,17,21,0.4); }
+        .correlation-panel { padding: 16px; border-left: 4px solid #2563eb; background: rgba(37,99,235,0.05); border-radius: 0 4px 4px 0; font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px; }
+        .correlation-meta { display: flex; gap: 24px; flex-wrap: wrap; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+        .breadcrumb-item { background: var(--bg-hover); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); font-family: monospace; }
+        .breadcrumb-separator { color: var(--accent); font-weight: bold; }
+        .iframe-container { width: 100%; height: calc(100vh - 210px); border: 1px solid var(--border); border-radius: 8px; }
+        iframe { width: 100%; height: 100%; border: none; }
+        .legend { display: flex; gap: 16px; margin-bottom: 12px; background-color: var(--bg-card); padding: 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.85rem; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+        #loader { position: absolute; top: 15px; right: 30px; background: rgba(26,31,46,0.9); border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; display: none; pointer-events: none; }
+        tr.anomaly-row { background-color: rgba(239,68,68,0.08); }
     </style>
 </head>
 <body>
-
     <aside>
-        <div class="brand">ROSscope</div>
+        <div class="brand">ROSscope 🔭</div>
         <ul class="nav-links">
             <li class="nav-item active" onclick="switchPage('overview')">Overview</li>
             <li class="nav-item" onclick="switchPage('topics')">Topics</li>
             <li class="nav-item" onclick="switchPage('alerts')">Alerts</li>
             <li class="nav-item" onclick="switchPage('graph')">Graph</li>
             <li class="nav-item" onclick="switchPage('services')">Services</li>
+            <li class="nav-item" onclick="switchPage('history')">History</li>
         </ul>
     </aside>
 
     <main>
         <header>
             <h1 id="page-title">Overview</h1>
-            <div id="loader">Fetching Updates...</div>
-            <div id="clock">--:--:-- --</div>
+            <div class="header-controls">
+                <select id="time-filter" class="filter-select" style="display:none;" onchange="handleTimeFilterChange()">
+                    <option value="15">Last 15 min</option>
+                    <option value="30">Last 30 min</option>
+                    <option value="60" selected>Last 1 hour</option>
+                    <option value="360">Last 6 hours</option>
+                </select>
+                <div id="loader">Fetching...</div>
+                <div id="clock">--:--:--</div>
+            </div>
         </header>
 
         <div class="content-container">
 
+            <!-- OVERVIEW -->
             <section id="page-overview" class="page active">
                 <div class="stats-grid">
                     <div class="stat-card" id="card-alerts">
@@ -371,104 +127,81 @@
                         <span class="stat-value" id="stat-managed-nodes">-</span>
                     </div>
                 </div>
-
                 <div class="panel">
                     <div class="panel-title">Active Runtime Alerts</div>
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Topic</th>
-                                <th>Z-Score</th>
-                                <th>State</th>
-                                <th>Fired At</th>
-                                <th style="width: 200px;">Actions</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Topic</th><th>Z-Score</th><th>State</th><th>Fired At</th><th>Actions</th></tr></thead>
                         <tbody id="overview-alerts-body"></tbody>
                     </table>
                 </div>
             </section>
 
+            <!-- TOPICS -->
             <section id="page-topics" class="page">
                 <div class="panel">
                     <div class="panel-title">ROS 2 Active Topics</div>
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Topic</th>
-                                <th>Type</th>
-                                <th>Rate (Hz)</th>
-                                <th>Messages</th>
-                                <th>Publishers</th>
-                                <th>Z-Score</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Topic</th><th>Type</th><th>Rate (Hz)</th><th>Messages</th><th>Publishers</th><th>Z-Score</th><th>Status</th></tr></thead>
                         <tbody id="topics-table-body"></tbody>
                     </table>
                 </div>
             </section>
 
+            <!-- ALERTS -->
             <section id="page-alerts" class="page">
                 <div class="panel">
                     <div class="panel-title">Active Alerts</div>
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Topic</th>
-                                <th>Z-Score</th>
-                                <th>State</th>
-                                <th>Fired At</th>
-                                <th>Acknowledged At</th>
-                                <th style="width: 250px;">Actions</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Topic</th><th>Z-Score</th><th>State</th><th>Fired At</th><th>Acknowledged At</th><th style="width:320px;">Actions</th></tr></thead>
                         <tbody id="alerts-active-body"></tbody>
                     </table>
                 </div>
-
                 <div class="panel">
-                    <div class="panel-title">Resolved History Log</div>
+                    <div class="panel-title">Resolved History</div>
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Topic</th>
-                                <th>Z-Score</th>
-                                <th>Fired At</th>
-                                <th>Resolved At</th>
-                                <th>Resolution Note</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Topic</th><th>Z-Score</th><th>Fired At</th><th>Resolved At</th><th>Note</th></tr></thead>
                         <tbody id="alerts-resolved-body"></tbody>
                     </table>
                 </div>
             </section>
 
+            <!-- GRAPH -->
             <section id="page-graph" class="page">
                 <div class="legend">
-                    <div class="legend-item"><span class="legend-dot" style="background: #ef4444;"></span> Node (Anomaly)</div>
-                    <div class="legend-item"><span class="legend-dot" style="background: #10b981;"></span> Node (Healthy)</div>
-                    <div class="legend-item"><span class="legend-dot" style="background: #38bdf8;"></span> Active Topic Connection</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#38bdf8;"></span> ROS 2 Node</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#10b981; border-radius:0; transform:rotate(45deg);"></span> Topic</div>
+                    <div class="legend-item">— Publishes &nbsp; --- Subscribes</div>
                 </div>
                 <div class="iframe-container">
                     <iframe src="http://localhost:8001/graph-viz"></iframe>
                 </div>
             </section>
-            
+
+            <!-- SERVICES -->
             <section id="page-services" class="page">
                 <div class="panel">
                     <div class="panel-title">ROS 2 Active Services</div>
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Service</th>
-                                <th>Type</th>
-                                <th>Servers</th>
-                                <th>Response Time (ms)</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Service</th><th>Type</th><th>Servers</th><th>Status</th></tr></thead>
                         <tbody id="services-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- HISTORY -->
+            <section id="page-history" class="page">
+                <div class="panel">
+                    <div class="panel-title">Topic Rate History</div>
+                    <table>
+                        <thead><tr><th>Time</th><th>Topic</th><th>Rate (Hz)</th><th>Messages</th><th>Publishers</th><th>Anomaly</th></tr></thead>
+                        <tbody id="history-topics-body"></tbody>
+                    </table>
+                </div>
+                <div class="panel">
+                    <div class="panel-title">Anomaly Events</div>
+                    <table>
+                        <thead><tr><th>Time</th><th>Topic</th><th>Rate (Hz)</th><th>Z-Score</th></tr></thead>
+                        <tbody id="history-anomalies-body"></tbody>
                     </table>
                 </div>
             </section>
@@ -477,282 +210,302 @@
     </main>
 
     <script>
-        const API_BASE = 'http://localhost:8001/api';
+        const API = 'http://localhost:8001/api';
         let currentTab = 'overview';
-        let dataPollInterval = null;
+        let pollInterval = null;
+        let historyMinutes = 60;
 
-        // Initialize Application
         window.addEventListener('DOMContentLoaded', () => {
-            updateClock();
-            setInterval(updateClock, 1000);
+            setInterval(() => {
+                document.getElementById('clock').innerText = new Date().toISOString().replace('T',' ').substring(0,19);
+            }, 1000);
             switchPage('overview');
         });
 
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toISOString().replace('T', ' ').substring(0, 19);
-        }
-
-        // Tab Switching Engine
         function switchPage(pageId) {
             currentTab = pageId;
-            
-            // UI Navigation element swapping
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            
-            const eventTarget = Array.from(document.querySelectorAll('.nav-item'))
-                .find(item => item.innerText.toLowerCase() === pageId);
-            if(eventTarget) eventTarget.classList.add('active');
-            
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const nav = Array.from(document.querySelectorAll('.nav-item')).find(i => i.innerText.toLowerCase() === pageId);
+            if (nav) nav.classList.add('active');
             document.getElementById(`page-${pageId}`).classList.add('active');
             document.getElementById('page-title').innerText = pageId.charAt(0).toUpperCase() + pageId.slice(1);
-
-            // Instant lifecycle data synchronization on navigation change
-            fetchCycleData();
-
-            // Setup loop isolation intervals
-            clearInterval(dataPollInterval);
-            dataPollInterval = setInterval(fetchCycleData, 5000);
+            document.getElementById('time-filter').style.display = pageId === 'history' ? 'block' : 'none';
+            clearInterval(pollInterval);
+            fetchAll();
+            pollInterval = setInterval(fetchAll, pageId === 'history' ? 30000 : 5000);
         }
 
-        // Show/Hide network loading element
+        function handleTimeFilterChange() {
+            historyMinutes = parseInt(document.getElementById('time-filter').value);
+            fetchAll();
+        }
+
         function toggleLoader(show) {
             document.getElementById('loader').style.display = show ? 'block' : 'none';
         }
 
-        // Main Fetch Engine Dispatcher
-        async function fetchCycleData() {
+        async function fetchAll() {
             toggleLoader(true);
             try {
-                if (currentTab === 'overview') {
-                    await Promise.all([updateOverviewStats(), updateOverviewAlertsTable()]);
-                } else if (currentTab === 'topics') {
-                    await updateTopicsTable();
-                } else if (currentTab === 'alerts') {
-                    await updateAlertsPageTables();
-                } else if (currentTab === 'services') {
-                    await updateServicesTable();
-                }
-            } catch (err) {
-                console.error("Data tracking Synchronization error: ", err);
-            } finally {
-                toggleLoader(false);
-            }
+                if (currentTab === 'overview') await Promise.all([fetchOverviewStats(), fetchOverviewAlerts()]);
+                else if (currentTab === 'topics') await fetchTopics();
+                else if (currentTab === 'alerts') await fetchAlerts();
+                else if (currentTab === 'services') await fetchServices();
+                else if (currentTab === 'history') await Promise.all([fetchHistoryTopics(), fetchHistoryAnomalies()]);
+            } catch(e) { console.error(e); }
+            finally { toggleLoader(false); }
         }
 
-        // Helper: Format raw JSON timestamps to look cleaner
-        function formatDate(isoString) {
-            if (!isoString) return '-';
-            return isoString.replace('T', ' ').substring(11, 19);
+        function fmt(iso) {
+            if (!iso) return '-';
+            return iso.replace('T',' ').substring(0,19);
         }
 
-        // ================= PAGE IMPLEMENTATIONS =================
+        function fmtTime(iso) {
+            if (!iso) return '-';
+            return iso.substring(11,19);
+        }
 
-        async function updateOverviewStats() {
-            const [resAlerts, resTopics, resServices, resNodes] = await Promise.all([
-                fetch(`${API_BASE}/alerts`).then(r => r.json()),
-                fetch(`${API_BASE}/topics`).then(r => r.json()),
-                fetch(`${API_BASE}/services`).then(r => r.json()),
-                fetch(`${API_BASE}/nodes`).then(r => r.json())
+        // ── OVERVIEW ──
+        async function fetchOverviewStats() {
+            const [a, t, s, n] = await Promise.all([
+                fetch(`${API}/alerts`).then(r=>r.json()),
+                fetch(`${API}/topics`).then(r=>r.json()),
+                fetch(`${API}/services`).then(r=>r.json()),
+                fetch(`${API}/nodes`).then(r=>r.json()),
             ]);
-
-            const activeAlertsCount = resAlerts.active ? resAlerts.active.length : 0;
-            const alertCard = document.getElementById('card-alerts');
-            const alertVal = document.getElementById('stat-active-alerts');
-
-            alertVal.innerText = activeAlertsCount;
-            if (activeAlertsCount > 0) {
-                alertCard.style.borderLeft = `4px solid var(--danger)`;
-                alertVal.style.color = `var(--danger)`;
-            } else {
-                alertCard.style.borderLeft = `4px solid var(--success)`;
-                alertVal.style.color = `var(--success)`;
-            }
-
-            document.getElementById('stat-active-topics').innerText = resTopics.topics ? resTopics.topics.length : 0;
-            document.getElementById('stat-active-services').innerText = resServices.services ? resServices.services.length : 0;
-            document.getElementById('stat-managed-nodes').innerText = resNodes.nodes ? resNodes.nodes.length : 0;
+            const count = a.active ? a.active.length : 0;
+            document.getElementById('stat-active-alerts').innerText = count;
+            const card = document.getElementById('card-alerts');
+            card.style.borderLeft = count > 0 ? '4px solid var(--danger)' : '4px solid var(--success)';
+            document.getElementById('stat-active-alerts').style.color = count > 0 ? 'var(--danger)' : 'var(--success)';
+            document.getElementById('stat-active-topics').innerText = t.topics ? t.topics.length : 0;
+            document.getElementById('stat-active-services').innerText = s.services ? s.services.length : 0;
+            document.getElementById('stat-managed-nodes').innerText = n.nodes ? n.nodes.length : 0;
         }
 
-        async function updateOverviewAlertsTable() {
-            const data = await fetch(`${API_BASE}/alerts`).then(r => r.json());
+        async function fetchOverviewAlerts() {
+            const data = await fetch(`${API}/alerts`).then(r=>r.json());
             const tbody = document.getElementById('overview-alerts-body');
             tbody.innerHTML = '';
-
-            if(!data.active || data.active.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No currently active alerts detected. Everything nominal.</td></tr>`;
+            if (!data.active || data.active.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No active alerts — all systems nominal.</td></tr>`;
                 return;
             }
-
             data.active.forEach(alert => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${alert.topic}</strong></td>
-                    <td style="color: ${alert.z_score >= 3 ? 'var(--danger)' : 'var(--text-main)'}">${alert.z_score}</td>
-                    <td><span class="badge ${alert.state === 'firing' ? 'badge-danger' : 'badge-warning'}">${alert.state}</span></td>
-                    <td>${formatDate(alert.fired_at)}</td>
+                    <td style="color:${alert.z_score>=3?'var(--danger)':'var(--text-main)'}">${alert.z_score}</td>
+                    <td><span class="badge ${alert.state==='firing'?'badge-danger':'badge-warning'}">${alert.state}</span></td>
+                    <td>${fmtTime(alert.fired_at)}</td>
                     <td>
                         <div class="btn-group">
-                            ${alert.state === 'firing' ? `<button class="btn-ack" onclick="postAction('acknowledge', '${alert.id}')">Acknowledge</button>` : ''}
-                            <button class="btn-resolve" onclick="renderInlineResolve(this, '${alert.id}')">Resolve</button>
+                            ${alert.state==='firing'?`<button class="btn-ack" onclick="doAction('acknowledge','${alert.id}')">Acknowledge</button>`:''}
+                            <button class="btn-resolve" onclick="showResolve(this,'${alert.id}')">Resolve</button>
                         </div>
-                    </td>
-                `;
+                    </td>`;
                 tbody.appendChild(tr);
             });
         }
 
-        async function updateTopicsTable() {
-            const data = await fetch(`${API_BASE}/topics`).then(r => r.json());
+        // ── TOPICS ──
+        async function fetchTopics() {
+            const data = await fetch(`${API}/topics`).then(r=>r.json());
             const tbody = document.getElementById('topics-table-body');
             tbody.innerHTML = '';
-
-            if(!data.topics || data.topics.length === 0) {
+            if (!data.topics || data.topics.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No active topics found.</td></tr>`;
                 return;
             }
-
             data.topics.forEach(t => {
+                const anomaly = t.is_anomaly;
                 const tr = document.createElement('tr');
-                const badgeClass = t.is_anomaly ? 'badge-danger' : 'badge-success';
-                const badgeLabel = t.is_anomaly ? '⚠ ANOMALY' : 'OK';
-                
                 tr.innerHTML = `
                     <td><strong>${t.topic}</strong></td>
-                    <td style="color: var(--text-muted); font-size: 0.8rem;">${t.type}</td>
-                    <td>${t.rate.toFixed(2)}</td>
-                    <td>${t.count}</td>
-                    <td>${t.publishers}</td>
-                    <td style="color: ${t.is_anomaly ? 'var(--danger)' : 'var(--text-main)'}">${t.z_score.toFixed(3)}</td>
-                    <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
-                `;
+                    <td style="color:var(--text-muted);font-size:0.8rem;">${t.type}</td>
+                    <td>${(t.rate !== undefined ? t.rate : t.rate_hz || 0).toFixed(2)}</td>
+                    <td>${t.count !== undefined ? t.count : t.msg_count || 0}</td>
+                    <td>${t.publishers !== undefined ? t.publishers : t.pub_count || 0}</td>
+                    <td style="color:${anomaly?'var(--danger)':'var(--text-main)'}">${(t.z_score||0).toFixed(3)}</td>
+                    <td><span class="badge ${anomaly?'badge-danger':'badge-success'}">${anomaly?'⚠ ANOMALY':'OK'}</span></td>`;
                 tbody.appendChild(tr);
             });
         }
 
-        async function updateServicesTable() {
-            const data = await fetch(`${API_BASE}/services`).then(r => r.json());
+        // ── SERVICES ──
+        async function fetchServices() {
+            const data = await fetch(`${API}/services`).then(r=>r.json());
             const tbody = document.getElementById('services-table-body');
             tbody.innerHTML = '';
-
             if (!data.services || data.services.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No active services found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="empty-state">No active services found.</td></tr>`;
                 return;
             }
-
             data.services.forEach(s => {
+                const name = s.service || s.Service || '';
+                const type = s.service_type || s.Service_type || s.type || '';
+                const count = s.server_count || 0;
                 const tr = document.createElement('tr');
-                const badgeClass = s.healthy ? 'badge-success' : 'badge-danger';
-                const badgeLabel = s.healthy ? 'HEALTHY' : 'UNAVAILABLE';
-
                 tr.innerHTML = `
-                    <td><strong>${s.service}</strong></td>
-                    <td style="color: var(--text-muted); font-size: 0.8rem;">${s.type}</td>
-                    <td>${s.server_count}</td>
-                    <td>${s.response_time_ms !== null ? s.response_time_ms.toFixed(2) : '-'}</td>
-                    <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
-                `;
+                    <td><strong>${name}</strong></td>
+                    <td style="color:var(--text-muted);font-size:0.8rem;">${type}</td>
+                    <td>${count}</td>
+                    <td><span class="badge ${count>0?'badge-success':'badge-danger'}">${count>0?'AVAILABLE':'UNAVAILABLE'}</span></td>`;
                 tbody.appendChild(tr);
             });
         }
 
-        async function updateAlertsPageTables() {
-            const data = await fetch(`${API_BASE}/alerts`).then(r => r.json());
-            
-            // Section 1: Active
+        // ── ALERTS ──
+        async function fetchAlerts() {
+            const data = await fetch(`${API}/alerts`).then(r=>r.json());
+
+            // Active
             const activeBody = document.getElementById('alerts-active-body');
             activeBody.innerHTML = '';
-            if(!data.active || data.active.length === 0) {
-                activeBody.innerHTML = `<tr><td colspan="6" class="empty-state">No currently active alerts.</td></tr>`;
+            if (!data.active || data.active.length === 0) {
+                activeBody.innerHTML = `<tr><td colspan="6" class="empty-state">No active alerts.</td></tr>`;
             } else {
                 data.active.forEach(alert => {
                     const tr = document.createElement('tr');
+                    tr.id = `alert-row-${alert.id}`;
                     tr.innerHTML = `
                         <td><strong>${alert.topic}</strong></td>
-                        <td>${alert.z_score}</td>
-                        <td><span class="badge ${alert.state === 'firing' ? 'badge-danger' : 'badge-warning'}">${alert.state}</span></td>
-                        <td>${formatDate(alert.fired_at)}</td>
-                        <td>${formatDate(alert.acknowledged_at)}</td>
+                        <td style="color:${alert.z_score>=3?'var(--danger)':'var(--text-main)'}">${alert.z_score}</td>
+                        <td><span class="badge ${alert.state==='firing'?'badge-danger':'badge-warning'}">${alert.state}</span></td>
+                        <td>${fmtTime(alert.fired_at)}</td>
+                        <td>${fmtTime(alert.acknowledged_at)}</td>
                         <td>
                             <div class="btn-group">
-                                ${alert.state === 'firing' ? `<button class="btn-ack" onclick="postAction('acknowledge', '${alert.id}')">Acknowledge</button>` : ''}
-                                <button class="btn-resolve" onclick="renderInlineResolve(this, '${alert.id}')">Resolve</button>
+                                ${alert.state==='firing'?`<button class="btn-ack" onclick="doAction('acknowledge','${alert.id}')">Acknowledge</button>`:''}
+                                <button class="btn-resolve" onclick="showResolve(this,'${alert.id}')">Resolve</button>
+                                <button class="btn-correlate" onclick="toggleCorrelate('${alert.id}')">Correlate</button>
                             </div>
-                        </td>
-                    `;
+                        </td>`;
                     activeBody.appendChild(tr);
                 });
             }
 
-            // Section 2: History (Resolved Log)
+            // Resolved
             const resolvedBody = document.getElementById('alerts-resolved-body');
             resolvedBody.innerHTML = '';
-            const historicalAlerts = data.all ? data.all.filter(a => a.state === 'resolved') : [];
-            
-            if(historicalAlerts.length === 0) {
-                resolvedBody.innerHTML = `<tr><td colspan="5" class="empty-state">No historical archives available.</td></tr>`;
+            const resolved = data.all ? data.all.filter(a => a.state === 'resolved') : [];
+            if (resolved.length === 0) {
+                resolvedBody.innerHTML = `<tr><td colspan="5" class="empty-state">No resolved alerts.</td></tr>`;
             } else {
-                historicalAlerts.forEach(alert => {
+                resolved.forEach(alert => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td><strong>${alert.topic}</strong></td>
                         <td>${alert.z_score}</td>
-                        <td>${formatDate(alert.fired_at)}</td>
-                        <td>${formatDate(alert.resolved_at)}</td>
-                        <td style="color: var(--text-muted); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${alert.note || ''}">
-                            ${alert.note || '<span style="font-style:italic; opacity:0.5;">No notes</span>'}
-                        </td>
-                    `;
+                        <td>${fmtTime(alert.fired_at)}</td>
+                        <td>${fmtTime(alert.resolved_at)}</td>
+                        <td style="color:var(--text-muted);">${alert.note || '<em>No note</em>'}</td>`;
                     resolvedBody.appendChild(tr);
                 });
             }
         }
 
-        // ================= ACTION OPERATIONS =================
-
-        async function postAction(action, id, params = '') {
-            try {
-                const response = await fetch(`${API_BASE}/alerts/${id}/${action}${params}`, {
-                    method: 'POST'
-                });
-                if(response.ok) {
-                    await fetchCycleData();
-                } else {
-                    alert(`API state operational refusal during process mutation: ${response.statusText}`);
-                }
-            } catch (err) {
-                console.error(`Post tracking execution mutation fault: `, err);
+        // ── HISTORY ──
+        async function fetchHistoryTopics() {
+            const data = await fetch(`${API}/history/topics?minutes=${historyMinutes}`).then(r=>r.json());
+            const tbody = document.getElementById('history-topics-body');
+            tbody.innerHTML = '';
+            const dataset = (Array.isArray(data) ? data : (data.events || [])).slice(0, 200);
+            if (dataset.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No history in the last ${historyMinutes} minutes.</td></tr>`;
+                return;
             }
-        }
-
-        function renderInlineResolve(buttonElement, id) {
-            const cellContainer = buttonElement.parentElement;
-            
-            // Check to avoid creating duplicate resolution inputs
-            if (cellContainer.querySelector('.resolve-input-container')) return;
-
-            const inputWrapper = document.createElement('div');
-            inputWrapper.className = 'resolve-input-container';
-            inputWrapper.innerHTML = `
-                <input type="text" placeholder="Reason note..." id="note-input-${id}">
-                <button class="btn-submit" onclick="submitInlineResolve('${id}')">✔</button>
-            `;
-            cellContainer.appendChild(inputWrapper);
-            const inputField = document.getElementById(`note-input-${id}`);
-            inputField.focus();
-            
-            // Allow submission on enter key press
-            inputField.addEventListener('keypress', (e) => {
-                if(e.key === 'Enter') submitInlineResolve(id);
+            dataset.forEach(e => {
+                const tr = document.createElement('tr');
+                const anomaly = e.is_anomaly;
+                tr.innerHTML = `
+                    <td style="font-variant-numeric:tabular-nums;">${fmtTime(e.time)}</td>
+                    <td><strong>${e.topic}</strong></td>
+                    <td>${(e.rate_hz || 0).toFixed(2)}</td>
+                    <td>${e.msg_count || 0}</td>
+                    <td>${e.pub_count || 0}</td>
+                    <td><span class="badge ${anomaly?'badge-danger':'badge-success'}">${anomaly?'⚠ YES':'OK'}</span></td>`;
+                tbody.appendChild(tr);
             });
         }
 
-        function submitInlineResolve(id) {
-            const inputField = document.getElementById(`note-input-${id}`);
-            const noteValue = encodeURIComponent(inputField.value.trim());
-            const paramString = noteValue ? `?note=${noteValue}` : '';
-            postAction('resolve', id, paramString);
+        async function fetchHistoryAnomalies() {
+            const data = await fetch(`${API}/history/anomalies?minutes=${historyMinutes}`).then(r=>r.json());
+            const tbody = document.getElementById('history-anomalies-body');
+            tbody.innerHTML = '';
+            const dataset = Array.isArray(data) ? data : (data.events || []);
+            if (dataset.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="empty-state">No anomaly events in the last ${historyMinutes} minutes.</td></tr>`;
+                return;
+            }
+            dataset.forEach(e => {
+                const tr = document.createElement('tr');
+                tr.className = 'anomaly-row';
+                tr.innerHTML = `
+                    <td style="font-variant-numeric:tabular-nums;">${fmtTime(e.time)}</td>
+                    <td><strong>${e.topic}</strong></td>
+                    <td>${(e.rate_hz || 0).toFixed(2)}</td>
+                    <td style="font-weight:600;color:var(--danger);">${(e.z_score || 0).toFixed(3)}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ── ACTIONS ──
+        async function doAction(action, id, params='') {
+            await fetch(`${API}/alerts/${id}/${action}${params}`, { method: 'POST' });
+            fetchAll();
+        }
+
+        function showResolve(btn, id) {
+            const group = btn.parentElement;
+            if (group.querySelector('.resolve-input-container')) return;
+            const div = document.createElement('div');
+            div.className = 'resolve-input-container';
+            div.innerHTML = `<input type="text" placeholder="Resolution note..." id="note-${id}"><button class="btn-submit" onclick="submitResolve('${id}')">✔</button>`;
+            group.appendChild(div);
+            const inp = document.getElementById(`note-${id}`);
+            inp.focus();
+            inp.addEventListener('keypress', e => { if (e.key==='Enter') submitResolve(id); });
+        }
+
+        function submitResolve(id) {
+            const val = encodeURIComponent((document.getElementById(`note-${id}`)?.value || '').trim());
+            doAction('resolve', id, val ? `?note=${val}` : '');
+        }
+
+        // ── CORRELATE ──
+        async function toggleCorrelate(alertId) {
+            const existing = document.getElementById(`corr-row-${alertId}`);
+            if (existing) { existing.remove(); return; }
+            const alertRow = document.getElementById(`alert-row-${alertId}`);
+            if (!alertRow) return;
+            toggleLoader(true);
+            try {
+                const res = await fetch(`${API}/alerts/${alertId}/correlate`).then(r=>r.json());
+                const row = document.createElement('tr');
+                row.id = `corr-row-${alertId}`;
+                row.className = 'correlation-row';
+                const cause = res.root_cause || 'No upstream cause found';
+                const conf = res.confidence || 'N/A';
+                let crumbs = '<em style="color:var(--text-muted)">No path data</em>';
+                if (res.path && res.path.length > 0) {
+                    crumbs = res.path.map((item, i) =>
+                        `<span class="breadcrumb-item">${item}</span>${i < res.path.length-1 ? '<span class="breadcrumb-separator">→</span>' : ''}`
+                    ).join('');
+                }
+                row.innerHTML = `<td colspan="6">
+                    <div class="correlation-panel">
+                        <div class="correlation-meta">
+                            <div><strong>Root Cause:</strong> <span style="color:var(--accent);font-weight:600;">${cause}</span></div>
+                            <div><strong>Confidence:</strong> <span style="color:var(--warning);">${conf}</span></div>
+                        </div>
+                        <div><strong>Path:</strong><div class="breadcrumb">${crumbs}</div></div>
+                    </div></td>`;
+                alertRow.parentNode.insertBefore(row, alertRow.nextSibling);
+            } catch(e) { console.error(e); }
+            finally { toggleLoader(false); }
         }
     </script>
 </body>
