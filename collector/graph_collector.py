@@ -125,6 +125,41 @@ def get_nodes():
         return {"nodes": []}
     return {"nodes": getattr(registry.lifecycle, 'latest_lifecycle_metrics', [])}
 
+@app.delete("/api/history/clear")
+def clear_history():
+    """Delete all historical metrics from TimescaleDB."""
+    from collector.registry import registry
+    if not registry.topic or not registry.topic.db:
+        return {"success": False, "error": "DB not connected"}
+    try:
+        conn = registry.topic.db._conn
+        with conn.cursor() as cur:
+            cur.execute("TRUNCATE TABLE topic_metrics;")
+            cur.execute("TRUNCATE TABLE service_metrics;")
+            cur.execute("TRUNCATE TABLE node_metrics;")
+        conn.commit()
+        return {"success": True, "message": "All metric history cleared"}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+@app.delete("/api/alerts/clear/resolved")
+def clear_resolved_alerts():
+    """Delete all resolved alerts from DB and memory."""
+    from collector.registry import registry
+    # Clear from memory
+    alert_manager._alerts = {k: v for k, v in alert_manager._alerts.items() 
+                              if v['state'] != 'resolved'}
+    # Clear from DB
+    if registry.topic and registry.topic.db:
+        try:
+            conn = registry.topic.db._conn
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM alerts WHERE state = 'resolved';")
+            conn.commit()
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+    return {"success": True, "message": "Resolved alerts cleared"}
+
 @app.get("/graph-viz")
 def serve_graph():
     html_path = os.path.join(os.path.dirname(__file__), '..', 'dashboard', 'graph.html')

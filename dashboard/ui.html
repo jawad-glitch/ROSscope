@@ -190,6 +190,10 @@
 
             <!-- HISTORY -->
             <section id="page-history" class="page">
+                <div style="display:flex; gap:12px; justify-content:flex-end;">
+                    <button class="btn-resolve" onclick="clearHistory()">🗑 Clear Metric History</button>
+                    <button class="btn-ack" onclick="clearResolvedAlerts()">🗑 Clear Resolved Alerts</button>
+                </div>
                 <div class="panel">
                     <div class="panel-title">Topic Rate History</div>
                     <table>
@@ -463,6 +467,20 @@
                     <td style="font-weight:600;color:var(--danger);">${(e.z_score || 0).toFixed(3)}</td>`;
                 tbody.appendChild(tr);
             });
+        }
+
+        async function clearHistory() {
+            if (!confirm('Delete all metric history from TimescaleDB? This cannot be undone.')) return;
+            const res = await fetch(`${API}/history/clear`, { method: 'DELETE' }).then(r=>r.json());
+            if (res.success) { alert('History cleared.'); fetchAll(); }
+            else alert('Error: ' + res.error);
+        }
+
+        async function clearResolvedAlerts() {
+            if (!confirm('Delete all resolved alerts?')) return;
+            const res = await fetch(`${API}/alerts/clear/resolved`, { method: 'DELETE' }).then(r=>r.json());
+            if (res.success) { alert('Resolved alerts cleared.'); fetchAll(); }
+            else alert('Error: ' + res.error);
         }
 
         // ── ACTIONS ──
