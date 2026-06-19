@@ -318,15 +318,19 @@ ROSscope/
 ## Roadmap
 
 ### v0.2.0 ✅
-- [x] Root cause correlation - trace failure cascades upstream to origin node
-- [x] Port consolidation - single port for all ROSscope endpoints
-- [x] Persistent alert history - survives restarts
+- [x] Root cause correlation
+- [x] Port consolidation
+- [x] Persistent alert history
 - [x] Services page in web UI
+- [x] TimescaleDB metric persistence
+- [x] History page with time filter   
+- [x] Clear history endpoints                
 
 ### v0.3.0
-- [ ] TimescaleDB - persistent metric history
 - [ ] Multi-machine fleet aggregation
 - [ ] TF tree freshness monitoring
+- [ ] Nodes page in web UI
+- [ ] FastRTPS compatibility
 - [ ] ROS 2 bag replay for post-mortem analysis
 
 ### v1.0.0 (production ready)
